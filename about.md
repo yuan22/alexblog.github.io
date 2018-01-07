@@ -8,4 +8,4 @@ titles:
 key: page-about
 ---
 
-This is the Alex's Blog. You can find out more info about Android basic usage documentation, and source code at: [alexblog](https://github.com/xiezeyangcn/xzyblog.github.io)
+This is the Alex's Blog. You can find out more info about Android basic usage documentation, and source code at: [alexblog](https://github.com/xiezeyangcn/alexblog.github.io)

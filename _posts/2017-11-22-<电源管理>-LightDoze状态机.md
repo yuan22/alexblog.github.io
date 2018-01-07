@@ -1,6 +1,6 @@
 ### 一、Light Doze状态机
 
-![](https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-22-light-doze-mode/doze_state_n_light.bmp)
+![](https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-22-light-doze-mode/doze_state_n_light.bmp)
 
 
 ### 二、Light Doze状态切换

@@ -433,7 +433,7 @@
         }
 ```
 
-![](https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-12-12-proximity-sensor/display_proximity_sensor_state.bmp)
+![](https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-12-12-proximity-sensor/display_proximity_sensor_state.bmp)
 
 &emsp;<1>DisplayPowerController构造函数中初始化SensorManager和ProximitySensor
 
