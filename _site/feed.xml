@@ -2784,8 +2784,8 @@ Mobile Radio功耗 = strengthOnPower + scanningPower + remainingActivePower&lt;/
 
 &lt;p&gt;总功耗 = 软件功耗 + 硬件功耗&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-12-01-power-calculator/calculate_hardware_power.png&quot; alt=&quot;&quot; /&gt;
-&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-12-01-power-calculator/calculate_hardware_power.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Alex</name><email>xiezeyangcn@gmail.com</email></author><summary type="html">一、软件功耗processAppUsage方法
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-12-01-power-calculator/calculate_hardware_power.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-12-01-power-calculator/calculate_hardware_power.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Alex</name><email>xiezeyangcn@gmail.com</email></author><summary type="html">一、软件功耗processAppUsage方法
 
     private void processAppUsage(SparseArray&amp;lt;UserHandle&amp;gt; asUsers) {
         // 判断是否统计所有用户app耗电情况，forAllUsers默认为true
@@ -3851,11 +3851,11 @@ Mobile Radio功耗 = strengthOnPower + scanningPower + remainingActivePower
     }</summary></entry><entry><title type="html">Deepdoze状态机初探</title><link href="http://localhost:4000//2017/11/26/%E5%8A%9F%E8%80%97%E7%B3%BB%E5%88%97-DeepDoze%E7%8A%B6%E6%80%81%E6%9C%BA%E5%88%9D%E6%8E%A2.html" rel="alternate" type="text/html" title="&lt;功耗系列&gt; Deepdoze状态机初探" /><published>2017-11-26T00:00:00+08:00</published><updated>2017-11-26T00:00:00+08:00</updated><id>http://localhost:4000//2017/11/26/%3C%E5%8A%9F%E8%80%97%E7%B3%BB%E5%88%97%3E-DeepDoze%E7%8A%B6%E6%80%81%E6%9C%BA%E5%88%9D%E6%8E%A2</id><content type="html" xml:base="http://localhost:4000//2017/11/26/%E5%8A%9F%E8%80%97%E7%B3%BB%E5%88%97-DeepDoze%E7%8A%B6%E6%80%81%E6%9C%BA%E5%88%9D%E6%8E%A2.html">&lt;h3 id=&quot;active---inactive---idlepending&quot;&gt;一、ACTIVE -&amp;gt; INACTIVE -&amp;gt; IDLE_PENDING状态切换&lt;/h3&gt;
 
 &lt;p&gt;状态机：
-&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-26-deep-doze-mode/doze_state_n_deep.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-26-deep-doze-mode/doze_state_n_deep.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;时序图：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-26-deep-doze-mode/active_inactive_idlepending.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-26-deep-doze-mode/active_inactive_idlepending.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;actionbatterychanged&quot;&gt;1.1 注册接收电池状态变化广播ACTION_BATTERY_CHANGED&lt;/h4&gt;
 
@@ -4109,9 +4109,9 @@ Mobile Radio功耗 = strengthOnPower + scanningPower + remainingActivePower
 
 &lt;p&gt;时序图：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-26-deep-doze-mode/idlepending_sensing.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-26-deep-doze-mode/idlepending_sensing.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-26-deep-doze-mode/sensing_locating.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-26-deep-doze-mode/sensing_locating.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;stepidlestatelocked&quot;&gt;2.1 stepIdleStateLocked&lt;/h4&gt;
 
@@ -4402,7 +4402,7 @@ Mobile Radio功耗 = strengthOnPower + scanningPower + remainingActivePower
 
 &lt;p&gt;时序图：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-26-deep-doze-mode/location_idlemaintenance_idle_idlemaintenance.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-26-deep-doze-mode/location_idlemaintenance_idle_idlemaintenance.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;stepidlestatelocked-2&quot;&gt;3.1 stepIdleStateLocked&lt;/h4&gt;
 
@@ -5516,7 +5516,7 @@ Mobile Radio功耗 = strengthOnPower + scanningPower + remainingActivePower
         }
     }</summary></entry><entry><title type="html">Lightdoze状态机初探</title><link href="http://localhost:4000//2017/11/22/%E5%8A%9F%E8%80%97%E7%B3%BB%E5%88%97-LightDoze%E7%8A%B6%E6%80%81%E6%9C%BA%E5%88%9D%E6%8E%A2.html" rel="alternate" type="text/html" title="&lt;功耗系列&gt; Lightdoze状态机初探" /><published>2017-11-22T00:00:00+08:00</published><updated>2017-11-22T00:00:00+08:00</updated><id>http://localhost:4000//2017/11/22/%3C%E5%8A%9F%E8%80%97%E7%B3%BB%E5%88%97%3E-LightDoze%E7%8A%B6%E6%80%81%E6%9C%BA%E5%88%9D%E6%8E%A2</id><content type="html" xml:base="http://localhost:4000//2017/11/22/%E5%8A%9F%E8%80%97%E7%B3%BB%E5%88%97-LightDoze%E7%8A%B6%E6%80%81%E6%9C%BA%E5%88%9D%E6%8E%A2.html">&lt;h3 id=&quot;light-doze&quot;&gt;一、Light Doze状态机&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-22-light-doze-mode/doze_state_n_light.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-22-light-doze-mode/doze_state_n_light.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;light-doze-1&quot;&gt;二、Light Doze状态切换&lt;/h3&gt;
 
@@ -6252,7 +6252,7 @@ xml
 
 &lt;p&gt; 4、在每个维护时段结束后，系统会再次进入Doze模式，暂停网络访问并推迟作业、同步和闹铃。随着时间的推移，系统安排维护时段的次数越来越少。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_m.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_m.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;doze-4&quot;&gt;2.3 退出Doze模式时机&lt;/h4&gt;
 
@@ -6273,7 +6273,7 @@ xml
 
 &lt;p&gt; &amp;lt;4&amp;gt;如果设备进入Deep Doze模式，则忽略Light Doze模式。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_n.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_n.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;dozedeep-mode&quot;&gt;2.5 Doze模式限制(Deep Mode)&lt;/h4&gt;
 
@@ -6323,7 +6323,7 @@ xml
 
 &lt;p&gt;  除了上述的Doze模式限制控制逻辑外，还在NetworkPolicyManagerService、JobSchedulerService、SyncManager、PowerManagerService和AlarmManagerService中加入了对Doze状态的监听和查询接口来进行响应的操作。在DeviceIdleController中实现对设备状态的控制和改变，并且通知其他相关注册了AppIdleStateChangeListener接口的服务进行处理，而反过来这些服务也可以向DeviceIdleController查询device的状态，是一种交互的关系。其控制逻辑和策略实现的代码关系如下图所示：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_device_idle_controller.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_device_idle_controller.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;doze-8&quot;&gt;2.8 Doze状态机&lt;/h4&gt;
 
@@ -6347,7 +6347,7 @@ xml
 
 &lt;p&gt;  &amp;lt;9&amp;gt;在除ACTIVE以外的所有状态中，检测到打断的行为如亮屏、插入充电器，位置的改变等状态就会回到ACTIVE，重新开始下一个轮回。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_state_m.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_state_m.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt; 2、Android N&lt;/p&gt;
 
@@ -6433,7 +6433,7 @@ xml
 
 &lt;h4 id=&quot;section-1&quot;&gt;5.2 对其它用例支持&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/xzyblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_support_case.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://xiezeyangcn.github.io/alexblog.github.io/assets/images/2017-11-20-doze-mode-introduce/doze_support_case.bmp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;  通过妥善管理网络连接、闹铃、作业和同步并使用FCM高优先级消息，几乎所有应用都应该能够支持Doze模式。对于一小部分用例，这可能还不够。对于此类用例，系统为部分免除Doze模式和AppStandby模式优化的应用提供了一份可配置的白名单。&lt;/p&gt;
 
