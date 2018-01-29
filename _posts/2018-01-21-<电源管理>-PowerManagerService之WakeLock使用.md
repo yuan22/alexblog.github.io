@@ -85,7 +85,7 @@ WakeLock(int flags, String tag, String packageName) {
 
 ### 二、Acquire WakeLock
 
-&emap;进程创建wakelock后，需要将其发送给PowerMS，交其管理。这个过程即acquire wakelock。
+&emsp;进程创建wakelock后，需要将其发送给PowerMS，交其管理。这个过程即acquire wakelock。
 
 #### 2.1 继续以RIL为例
 
