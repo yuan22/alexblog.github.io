@@ -29,7 +29,6 @@ private void startOtherServices() {
 ### 二、PowerMS 构造函数
 
 ```java
-（PowerManagerService.java）
 public PowerManagerService(Context context) {
   super(context);
   mContext = context;
@@ -127,7 +126,6 @@ static void nativeSetFeature(JNIEnv *env, jclass clazz, jint featureId, jint dat
 &emsp;紧接着来看看PowerMS的onStart函数：
 
 ```java
-（PowerManagerService.java）
 public void onStart() {
   publishBinderService(Context.POWER_SERVICE, new BinderService());
   publishLocalService(PowerManagerInternal.class, new LocalService());
@@ -177,7 +175,6 @@ public static <T> void addService(Class<T> type, T service) {
 #### 3.3 Watchdog类的addMonitor方法
 
 ```java
-（Watchdog.java）
 public void addMonitor(Monitor monitor) {
   synchronized (this) {
     if (isAlive()) {
