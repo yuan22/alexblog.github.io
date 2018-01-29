@@ -120,7 +120,8 @@ hasLongPressOnPowerBehavior()) {
   }
 }
 ```
-##### 1.1 hasLongPressOnPowerBehavior方法
+
+#### 1.1 hasLongPressOnPowerBehavior方法
 
 ```java
 //是否支持长按行为
@@ -146,7 +147,7 @@ public void init(Context context, IWindowManager windowManager,
 
 ```
 
-##### 1.2 MSG_POWER_LONG_PRESS消息处理
+#### 1.2 MSG_POWER_LONG_PRESS消息处理
 
 ```java
 // 处理MSG_POWER_LONG_PRESS消息
@@ -181,7 +182,7 @@ private void powerLongPress() {
 }
 ```
 
-##### 1.3 wakeUpFromPowerKey方法
+#### 1.3 wakeUpFromPowerKey方法
 
 ```java
 // 灭屏按Power键调用wakeUpFromPowerKey方法
@@ -242,8 +243,6 @@ private void wakeUpInternal(long eventTime, String reason, int uid, String opPac
 
 ### 二、interceptPowerKeyUp方法
 
-####
-
 ```java
 private void interceptPowerKeyUp(KeyEvent event, boolean interactive, boolean canceled) {
   final boolean handled = canceled || mPowerKeyHandled;
@@ -271,7 +270,7 @@ private void interceptPowerKeyUp(KeyEvent event, boolean interactive, boolean ca
 }
 ```
 
-##### 2.1 powerPress方法
+#### 2.1 powerPress方法
 
 ```java
 private void powerPress(long eventTime, boolean interactive, int count) {
@@ -297,7 +296,7 @@ private void powerPress(long eventTime, boolean interactive, int count) {
 }
 ```
 
-##### 2.2 goToSleep方法
+#### 2.2 goToSleep方法
 
 ```java
 // PowerManager
@@ -336,7 +335,7 @@ private void goToSleepInternal(long eventTime, int reason, int flags, int uid) {
 }
 ```
 
-##### 2.3 finishPowerKeyPress方法
+#### 2.3 finishPowerKeyPress方法
 
 ```java
 private void finishPowerKeyPress() {
