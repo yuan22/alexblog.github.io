@@ -1,4 +1,6 @@
-#### target-file-package编译解析
+##### 1.1 编译target files依赖的目标
+
+首先，列出编译target-files依赖的目标。如boot/system/vendor等image，imgdifff/bsdiff/releasetool等编译OTA包的工具。
 
 ```makefile
 $(BUILT_TARGET_FILES_PACKAGE): \
@@ -55,6 +57,13 @@ $(BUILT_TARGET_FILES_PACKAGE): \
         # vendor_matrix.xml
         $(BUILT_VENDOR_MATRIX) \
         | $(ACP)
+```
+
+##### 1.2 创建target files目录
+
+将上述依赖的目标列入target-files list，创建target-files目录，为后续打包作准备。
+
+```makefile
     @echo "Package target files: $@"
     # system/vendor -> vendor链接
     $(call create-system-vendor-symlink)
@@ -64,6 +73,13 @@ $(BUILT_TARGET_FILES_PACKAGE): \
     $(hide) rm -rf $@ $@.list $(zip_root)
     # 创建target file package目录
     $(hide) mkdir -p $(dir $@) $(zip_root)
+```
+
+##### 1.3 recovery as boot处理
+
+若有定义recovery as boot为true，则将recovery/root，2ndbootloader，kernel，dtbo，cmdline等内容拷贝至recovery目录，否则将其直接拷入boot目录。
+
+```makefile
 # 若BOARD_USES_RECOVERY_AS_BOOT为true，则处理recovery image相关目标
 ifneq (,$(INSTALLED_RECOVERYIMAGE_TARGET)$(filter true,$(BOARD_USES_RECOVERY_AS_BOOT)))
     # PRIVATE_RECOVERY_OUT即创建RECOVERY目录
@@ -129,6 +145,13 @@ ifneq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
         $(hide) echo "$(BOARD_KERNEL_PAGESIZE)" > $(zip_root)/BOOT/pagesize
     endif
 endif
+```
+
+#### 1.4 radio/system/vendor等img处理
+
+在target-files创建RADIO/VENDOR/SYSTEM等目录，并将out目录对应内容拷贝至此。
+
+```makefile
     # 创建RADIO目录，并按radio image层次目录将radio image目标拷入
     $(hide) $(foreach t,$(INSTALLED_RADIOIMAGE_TARGET),\
                 mkdir -p $(zip_root)/RADIO; \
@@ -157,7 +180,29 @@ endif
     # 创建OTA目标，并将android-info.txt拷入OTA目录
     $(hide) mkdir -p $(zip_root)/OTA
     $(hide) cp $(INSTALLED_ANDROID_INFO_TXT_TARGET) $(zip_root)/OTA/
-# 若AB_OTA_UPDATER为true，则创建OTA/bin目录，并将updater拷入OTA/bin目录
+# 若system base fs非空，则将其拷至META目录
+ifneq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SYSTEM_BASE_FS_PATH),)
+    $(hide) cp $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SYSTEM_BASE_FS_PATH) \
+      $(zip_root)/META/$(notdir $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SYSTEM_BASE_FS_PATH))
+endif
+# 若vendor base fs非空，则将其拷至META目录
+ifneq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_VENDOR_BASE_FS_PATH),)
+    $(hide) cp $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_VENDOR_BASE_FS_PATH) \
+      $(zip_root)/META/$(notdir $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_VENDOR_BASE_FS_PATH))
+endif
+# 若product base fs非空，则将其拷至META目录
+ifneq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PRODUCT_BASE_FS_PATH),)
+    $(hide) cp $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PRODUCT_BASE_FS_PATH) \
+      $(zip_root)/META/$(notdir $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PRODUCT_BASE_FS_PATH))
+endif
+```
+
+##### 1.5 ota tool/apkcert/key/selinux处理处理
+
+若为Non A/B项目，则将ota tool拷入OTA/bin目录。将apkcert/tool/otakeys/file_contexts.bin拷入META目录。
+
+```makefile
+# 若AB_OTA_UPDATER为false，则创建OTA/bin目录，并将updater拷入OTA/bin目录
 ifneq ($(AB_OTA_UPDATER),true)
 ifneq ($(built_ota_tools),)
     $(hide) mkdir -p $(zip_root)/OTA/bin
@@ -175,6 +220,11 @@ endif
     $(hide) echo "$(PRODUCT_OTA_PUBLIC_KEYS)" > $(zip_root)/META/otakeys.txt
     # 将selinux目录file_contexts.bin文件拷入META目录
     $(hide) cp $(SELINUX_FC) $(zip_root)/META/file_contexts.bin
+```
+
+##### 1.6 生成misc_info.txt文件
+
+```makefile
     # 将recovery api版本信息赋给recovery_api_version并写入META目录misc_info.txt文件
     $(hide) echo "recovery_api_version=$(PRIVATE_RECOVERY_API_VERSION)" > $(zip_root)/META/misc_info.txt
     # 将fstab版本信息赋给fstab_version并写入META目录misc_info.txt文件
@@ -226,21 +276,6 @@ endif
 ifneq ($(OEM_THUMBPRINT_PROPERTIES),)
     $(hide) echo "oem_fingerprint_properties=$(OEM_THUMBPRINT_PROPERTIES)" >> $(zip_root)/META/misc_info.txt
 endif
-# 若system base fs非空，则将其拷至META目录
-ifneq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SYSTEM_BASE_FS_PATH),)
-    $(hide) cp $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SYSTEM_BASE_FS_PATH) \
-      $(zip_root)/META/$(notdir $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SYSTEM_BASE_FS_PATH))
-endif
-# 若vendor base fs非空，则将其拷至META目录
-ifneq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_VENDOR_BASE_FS_PATH),)
-    $(hide) cp $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_VENDOR_BASE_FS_PATH) \
-      $(zip_root)/META/$(notdir $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_VENDOR_BASE_FS_PATH))
-endif
-# 若product base fs非空，则将其拷至META目录
-ifneq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PRODUCT_BASE_FS_PATH),)
-    $(hide) cp $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PRODUCT_BASE_FS_PATH) \
-      $(zip_root)/META/$(notdir $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PRODUCT_BASE_FS_PATH))
-endif
 # 若SANITIZE_TARGET非空，则将userdata_img_with_data=true写入META目录misc_info.txt文件
 ifneq ($(strip $(SANITIZE_TARGET)),)
     $(hide) echo "userdata_img_with_data=true" >> $(zip_root)/META/misc_info.txt
@@ -248,39 +283,6 @@ endif
 # 若BOARD_USES_FULL_RECOVERY_IMAGE为true，则将full_recovery_image=true写入META目录misc_info.txt文件
 ifeq ($(BOARD_USES_FULL_RECOVERY_IMAGE),true)
     $(hide) echo "full_recovery_image=true" >> $(zip_root)/META/misc_info.txt
-endif
-# 若BOARD_AVB_ENABLE为true，则：
-# 将avb_enable=true"写入META目录misc_info.txt文件
-# 将BOARD_AVB_KEY_PATH赋给avb_vbmeta_key_path，并写入META目录misc_info.txt文件
-# 将BOARD_AVB_ALGORITHM赋给avb_vbmeta_algorithm，并写入META目录misc_info.txt文件
-# 将BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS赋给avb_vbmeta_args，并写入META目录misc_info.txt文件
-# 将BOARD_AVB_BOOT_ADD_HASH_FOOTER_ARGS赋给avb_boot_add_hash_footer_args，并写入META目录misc_info.txt文件
-ifeq ($(BOARD_AVB_ENABLE),true)
-    $(hide) echo "avb_enable=true" >> $(zip_root)/META/misc_info.txt
-    $(hide) echo "avb_vbmeta_key_path=$(BOARD_AVB_KEY_PATH)" >> $(zip_root)/META/misc_info.txt
-    $(hide) echo "avb_vbmeta_algorithm=$(BOARD_AVB_ALGORITHM)" >> $(zip_root)/META/misc_info.txt
-    $(hide) echo "avb_vbmeta_args=$(BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS)" >> $(zip_root)/META/misc_info.txt
-    $(hide) echo "avb_boot_add_hash_footer_args=$(BOARD_AVB_BOOT_ADD_HASH_FOOTER_ARGS)" >> $(zip_root)/META/misc_info.txt
-    # 若有定义BOARD_AVB_BOOT_KEY_PATH，则：
-    # 将BOARD_AVB_BOOT_KEY_PATH赋给avb_boot_key_path，并写入META目录misc_info.txt文件
-    # 将BOARD_AVB_BOOT_ALGORITHM赋给avb_boot_algorithm，并写入META目录misc_info.txt文件
-    # 将BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION赋给avb_boot_rollback_index_location，并写入META目录misc_info.txt文件
-    ifdef BOARD_AVB_BOOT_KEY_PATH
-        $(hide) echo "avb_boot_key_path=$(BOARD_AVB_BOOT_KEY_PATH)" >> $(zip_root)/META/misc_info.txt
-        $(hide) echo "avb_boot_algorithm=$(BOARD_AVB_BOOT_ALGORITHM)" >> $(zip_root)/META/misc_info.txt
-        $(hide) echo "avb_boot_rollback_index_location=$(BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION)" >> $(zip_root)/META/misc_info.txt
-    endif
-    # 将BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS赋给avb_recovery_add_hash_footer_args，并写入META目录misc_info.txt文件
-    $(hide) echo "avb_recovery_add_hash_footer_args=$(BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS)" >> $(zip_root)/META/misc_info.txt
-    # 若有定义BOARD_AVB_RECOVERY_KEY_PATH，则：
-    # 将BOARD_AVB_RECOVERY_KEY_PATH赋给avb_recovery_key_path，并写入META目录misc_info.txt文件
-    # 将BOARD_AVB_RECOVERY_ALGORITHM赋给avb_recovery_algorithm，并写入META目录misc_info.txt文件
-    # 将BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION赋给avb_recovery_rollback_index_location，并写入META目录misc_info.txt文件
-    ifdef BOARD_AVB_RECOVERY_KEY_PATH
-        $(hide) echo "avb_recovery_key_path=$(BOARD_AVB_RECOVERY_KEY_PATH)" >> $(zip_root)/META/misc_info.txt
-        $(hide) echo "avb_recovery_algorithm=$(BOARD_AVB_RECOVERY_ALGORITHM)" >> $(zip_root)/META/misc_info.txt
-        $(hide) echo "avb_recovery_rollback_index_location=$(BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION)" >> $(zip_root)/META/misc_info.txt
-    endif
 endif
 # 若有定义BOARD_BPT_INPUT_FILES，则：
 # 将board_bpt_enable=true写入META目录misc_info.txt文件
@@ -297,11 +299,49 @@ ifdef BOARD_BPT_DISK_SIZE
 endif
     # 将userimage prop写入META目录misc_info.txt文件
     $(call generate-userimage-prop-dictionary, $(zip_root)/META/misc_info.txt)
-# 若INSTALLED_RECOVERYIMAGE_TARGET非空，则调用make_recovery_patch脚本
-ifneq ($(INSTALLED_RECOVERYIMAGE_TARGET),)
-    $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MKBOOTIMG) \
-        build/make/tools/releasetools/make_recovery_patch $(zip_root) $(zip_root)
+```
+
+##### 1.6 写入AVB信息到misc_info中
+
+```makefile
+# 若BOARD_AVB_ENABLE为true，则：
+# 将avb_enable=true"写入META目录misc_info.txt文件
+# 将BOARD_AVB_KEY_PATH赋给avb_vbmeta_key_path，并写入META目录misc_info.txt文件
+# 将BOARD_AVB_ALGORITHM赋给avb_vbmeta_algorithm，并写入META目录misc_info.txt文件
+# 将BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS赋给avb_vbmeta_args，并写入META目录misc_info.txt文件
+# 将BOARD_AVB_BOOT_ADD_HASH_FOOTER_ARGS赋给avb_boot_add_hash_footer_args，并写入META目录misc_info.txt文件
+ifeq ($(BOARD_AVB_ENABLE),true)
+    $(hide) echo "avb_enable=true" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_vbmeta_key_path=$(BOARD_AVB_KEY_PATH)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_vbmeta_algorithm=$(BOARD_AVB_ALGORITHM)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_vbmeta_args=$(BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_boot_add_hash_footer_args=$(BOARD_AVB_BOOT_ADD_HASH_FOOTER_ARGS)" >> $(zip_root)/META/misc_info.txt
+    # 若有定义BOARD_AVB_BOOT_KEY_PATH，则：
+    # 将BOARD_AVB_BOOT_KEY_PATH赋给avb_boot_key_path，并写入META目录misc_info.txt文件
+    # 将BOARD_AVB_BOOT_ALGORITHM赋给avb_boot_algorithm，并写入META目录misc_info.txt文件
+    # 将BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION赋给avb_boot_rollback_index_location，并写入META目录misc_info.txt文件
+ifdef BOARD_AVB_BOOT_KEY_PATH
+    $(hide) echo "avb_boot_key_path=$(BOARD_AVB_BOOT_KEY_PATH)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_boot_algorithm=$(BOARD_AVB_BOOT_ALGORITHM)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_boot_rollback_index_location=$(BOARD_AVB_BOOT_ROLLBACK_INDEX_LOCATION)" >> $(zip_root)/META/misc_info.txt
 endif
+    # 将BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS赋给avb_recovery_add_hash_footer_args，并写入META目录misc_info.txt文件
+    $(hide) echo "avb_recovery_add_hash_footer_args=$(BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS)" >> $(zip_root)/META/misc_info.txt
+    # 若有定义BOARD_AVB_RECOVERY_KEY_PATH，则：
+    # 将BOARD_AVB_RECOVERY_KEY_PATH赋给avb_recovery_key_path，并写入META目录misc_info.txt文件
+    # 将BOARD_AVB_RECOVERY_ALGORITHM赋给avb_recovery_algorithm，并写入META目录misc_info.txt文件
+    # 将BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION赋给avb_recovery_rollback_index_location，并写入META目录misc_info.txt文件
+ifdef BOARD_AVB_RECOVERY_KEY_PATH
+    $(hide) echo "avb_recovery_key_path=$(BOARD_AVB_RECOVERY_KEY_PATH)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_recovery_algorithm=$(BOARD_AVB_RECOVERY_ALGORITHM)" >> $(zip_root)/META/misc_info.txt
+    $(hide) echo "avb_recovery_rollback_index_location=$(BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION)" >> $(zip_root)/META/misc_info.txt
+endif
+endif
+```
+
+##### 1.6 A/B Updater处理
+
+```makefile
 # AB_OTA_UPDATER为true
 ifeq ($(AB_OTA_UPDATER),true)
     # 将system/update_engine/update_engine.conf拷入META目录update_engine_config.txt文件
@@ -336,6 +376,16 @@ ifeq ($(AB_OTA_UPDATER),true)
         $(hide) cp $(TARGET_OUT_OEM)/$(OSRELEASED_DIRECTORY)/product_version $(zip_root)/META/product_version.txt
         $(hide) cp $(TARGET_OUT_ETC)/$(OSRELEASED_DIRECTORY)/system_version $(zip_root)/META/system_version.txt
     endif
+endif
+```
+
+##### 1.7 处理recovery及预编译的vendor/boot/dtbo等imag
+
+```makefile
+# 若INSTALLED_RECOVERYIMAGE_TARGET非空，则调用make_recovery_patch脚本
+ifneq ($(INSTALLED_RECOVERYIMAGE_TARGET),)
+    $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MKBOOTIMG) \
+        build/make/tools/releasetools/make_recovery_patch $(zip_root) $(zip_root)
 endif
 # 若BREAKPAD_GENERATE_SYMBOLS为true，则将breakpad加入BREAKPAD目录
 ifeq ($(BREAKPAD_GENERATE_SYMBOLS),true)
@@ -385,6 +435,11 @@ ifdef BOARD_PREBUILT_DTBOIMAGE
         endif
     endif
 endif
+```
+
+##### 1.8 处理radio/vendor/system等img的file config内容
+
+```makefile
     # 将radio image信息写入META目录pack_radioimages.txt文件
     $(hide) $(foreach part,$(BOARD_PACK_RADIOIMAGES), \
         echo $(part) >> $(zip_root)/META/pack_radioimages.txt;)
@@ -435,6 +490,11 @@ endif
     $(hide) find $(zip_root) -path $(zip_root)/META -prune -o -print | sort >>$@.list
     # 按*.list文件进行target file package的打包
     $(hide) $(SOONG_ZIP) -d -o $@ -C $(zip_root) -l $@.list
+```
+
+##### 1.9 定义target-files-package模块编译
+
+```makefile
 # 用于make target-files-package
 .PHONY: target-files-package
 target-files-package: $(BUILT_TARGET_FILES_PACKAGE)
