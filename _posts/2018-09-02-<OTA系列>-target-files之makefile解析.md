@@ -199,7 +199,8 @@ endif
 
 ##### 1.5 ota tool/apkcert/key/selinux处理处理
 
-若为Non A/B项目，则将ota tool拷入OTA/bin目录。将apkcert/tool/otakeys/file_contexts.bin拷入META目录。
+若为Non A/B项目，则将ota tool拷入OTA/bin目录。
+将apkcerts/tool/otakeys/file_contexts.bin拷入META目录。
 
 ```makefile
 # 若AB_OTA_UPDATER为false，则创建OTA/bin目录，并将updater拷入OTA/bin目录
@@ -301,7 +302,7 @@ endif
     $(call generate-userimage-prop-dictionary, $(zip_root)/META/misc_info.txt)
 ```
 
-##### 1.6 写入AVB信息到misc_info中
+##### 1.7 将AVB信息到misc_info中
 
 ```makefile
 # 若BOARD_AVB_ENABLE为true，则：
@@ -339,7 +340,7 @@ endif
 endif
 ```
 
-##### 1.6 A/B Updater处理
+##### 1.7 将A/B Updater信息写入misc_info
 
 ```makefile
 # AB_OTA_UPDATER为true
@@ -379,7 +380,7 @@ ifeq ($(AB_OTA_UPDATER),true)
 endif
 ```
 
-##### 1.7 处理recovery及预编译的vendor/boot/dtbo等imag
+##### 1.8 处理recovery及预编译的vendor/boot/dtbo等imag
 
 ```makefile
 # 若INSTALLED_RECOVERYIMAGE_TARGET非空，则调用make_recovery_patch脚本
@@ -437,7 +438,7 @@ ifdef BOARD_PREBUILT_DTBOIMAGE
 endif
 ```
 
-##### 1.8 处理radio/vendor/system等img的file config内容
+##### 1.9 处理radio/vendor/system等img的file config内容
 
 ```makefile
     # 将radio image信息写入META目录pack_radioimages.txt文件
@@ -492,7 +493,7 @@ endif
     $(hide) $(SOONG_ZIP) -d -o $@ -C $(zip_root) -l $@.list
 ```
 
-##### 1.9 定义target-files-package模块编译
+##### 1.10 定义target-files-package模块编译
 
 ```makefile
 # 用于make target-files-package
